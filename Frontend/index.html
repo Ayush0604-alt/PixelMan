@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PIXELMAN | Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+
+   <div class="brand">
+  <h1 class="brand-title">PIXELMAN</h1>
+  <p class="brand-tagline">Enhancing Pictures is an art..</p>
+</div>
+
+
+    <form id="authForm" class="auth-card">
+      <h2 id="formTitle">Login</h2>
+
+      <div class="input-group">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" id="username" placeholder="Username" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="password" placeholder="Password" required>
+      </div>
+
+      <button type="submit" class="btn-primary" id="submitBtn">
+        Login
+      </button>
+
+      <p class="switch-text">
+        <span id="toggleText">Don't have an account? Register</span>
+      </p>
+
+      <p id="message" class="message"></p>
+    </form>
+
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>

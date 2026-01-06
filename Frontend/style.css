@@ -1,0 +1,123 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+body {
+  min-height: 100vh;
+  background: #f9fafb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #1f2933;
+}
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: #f97316; 
+}
+
+.header p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 5px;
+}
+
+.auth-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+
+.input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  background: #ffffff;
+}
+
+.input-group i {
+  color: #f97316;
+  margin-right: 10px;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+
+.btn-primary {
+  width: 100%;
+  background: #f97316;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #ea580c;
+}
+
+
+.switch-text {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.switch-text span {
+  color: #f97316;
+  cursor: pointer;
+  font-weight: 500;
+}
+/* ================= BRAND / TITLE ================= */
+.brand {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.brand-title {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ff7a00; /* Orange */
+  margin-bottom: 6px;
+}
+
+.brand-tagline {
+  font-size: 14px;
+  color: #666;
+  letter-spacing: 0.5px;
+}

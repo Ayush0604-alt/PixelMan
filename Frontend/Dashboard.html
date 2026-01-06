@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIXELMAN Dashboard</title>
+
+  <link rel="stylesheet" href="style1.css">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <h1>PIXELMAN</h1>
+    <button id="logoutBtn">Logout</button>
+  </header>
+
+  <div class="container">
+
+    <!-- CONTROLS -->
+    <aside class="controls">
+
+      <div class="upload-box">
+        <label class="upload-label">
+          Upload Image
+          <input type="file" id="uploadInput" accept="image/*">
+        </label>
+      </div>
+
+      <!-- SLIDERS -->
+      <div class="slider-group">
+        <label>Brightness</label>
+        <input type="range" id="brightness" min="0" max="200" value="100">
+      </div>
+
+      <div class="slider-group">
+        <label>Contrast</label>
+        <input type="range" id="contrast" min="0" max="200" value="100">
+      </div>
+
+      <div class="slider-group">
+        <label>Saturation</label>
+        <input type="range" id="saturation" min="0" max="200" value="100">
+      </div>
+
+      <div class="slider-group">
+        <label>Blur</label>
+        <input type="range" id="blur" min="0" max="10" value="0">
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="button-group">
+        <button class="btn" id="grayscaleBtn">Grayscale</button>
+        <button class="btn" id="sepiaBtn">Sepia</button>
+        <button class="btn" id="resetBtn">Reset</button>
+      </div>
+
+      <div class="button-group">
+        <button class="btn" id="rotateBtn">Rotate</button>
+        <button class="btn" id="flipBtn">Flip</button>
+      </div>
+
+      <button class="download-btn" id="downloadBtn">
+        Download Image
+      </button>
+
+      <button id="savePreferences">Save Preferences</button>
+
+
+
+
+    </aside>
+
+    <!-- CANVAS -->
+    <main class="canvas-container">
+      <canvas id="canvas"></canvas>
+    </main>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
