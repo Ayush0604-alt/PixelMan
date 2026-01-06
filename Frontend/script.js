@@ -1,3 +1,5 @@
+const API_BASE = "https://pixelman-backend.onrender.com";
+
 /* ================== AUTH GUARD ================== */
 const token = localStorage.getItem("token");
 
@@ -7,12 +9,11 @@ if (!token) {
 }
 
 /* ================== VERIFY TOKEN ================== */
-fetch("http://localhost:5000/api/auth/me", {
+fetch(`${API_BASE}/api/auth/me`, {
   headers: { Authorization: `Bearer ${token}` }
 })
   .then(res => {
-    if (!res.ok) throw new Error("Invalid token");
-    return res.json();
+    if (!res.ok) throw new Error();
   })
   .catch(() => {
     localStorage.clear();
@@ -21,8 +22,7 @@ fetch("http://localhost:5000/api/auth/me", {
   });
 
 /* ================== LOGOUT ================== */
-const logoutBtn = document.getElementById("logoutBtn");
-logoutBtn.addEventListener("click", () => {
+document.getElementById("logoutBtn").addEventListener("click", () => {
   localStorage.clear();
   window.location.href = "index.html";
 });
@@ -30,7 +30,6 @@ logoutBtn.addEventListener("click", () => {
 /* ================== CANVAS SETUP ================== */
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-
 const uploadInput = document.getElementById("uploadInput");
 
 /* ================== CONTROLS ================== */
@@ -43,7 +42,6 @@ const grayscaleBtn = document.getElementById("grayscaleBtn");
 const sepiaBtn = document.getElementById("sepiaBtn");
 const resetBtn = document.getElementById("resetBtn");
 const downloadBtn = document.getElementById("downloadBtn");
-
 const rotateBtn = document.getElementById("rotateBtn");
 const flipBtn = document.getElementById("flipBtn");
 const savePrefBtn = document.getElementById("savePreferences");
@@ -56,21 +54,18 @@ let rotation = 0;
 let flipX = 1;
 let flipY = 1;
 
-/* ================== LOAD USER PREFERENCES ================== */
-fetch("http://localhost:5000/api/preferences", {
+/* ================== LOAD PREFERENCES ================== */
+fetch(`${API_BASE}/api/preferences`, {
   headers: { Authorization: `Bearer ${token}` }
 })
   .then(res => res.json())
   .then(pref => {
-    if (pref && pref.defaults) {
+    if (pref?.defaults) {
       brightness.value = pref.defaults.brightness ?? 100;
       contrast.value = pref.defaults.contrast ?? 100;
       saturation.value = pref.defaults.saturation ?? 100;
       blur.value = pref.defaults.blur ?? 0;
     }
-  })
-  .catch(() => {
-    console.log("No preferences found");
   });
 
 /* ================== IMAGE UPLOAD ================== */
@@ -87,105 +82,64 @@ uploadInput.addEventListener("change", (e) => {
 image.onload = () => {
   canvas.width = image.width;
   canvas.height = image.height;
-  applyFilters(); // ✅ APPLY ONLY AFTER IMAGE LOAD
+  applyFilters();
 };
 
 /* ================== APPLY FILTERS ================== */
 function applyFilters() {
   if (!image.src) return;
 
-  const b = brightness.value;
-  const c = contrast.value;
-  const s = saturation.value;
-  const bl = blur.value;
-
-  let filterString = `
-    brightness(${b}%)
-    contrast(${c}%)
-    saturate(${s}%)
-    blur(${bl}px)
+  let filter = `
+    brightness(${brightness.value}%)
+    contrast(${contrast.value}%)
+    saturate(${saturation.value}%)
+    blur(${blur.value}px)
   `;
 
-  if (isGrayscale) filterString += " grayscale(100%)";
-  if (isSepia) filterString += " sepia(100%)";
+  if (isGrayscale) filter += " grayscale(100%)";
+  if (isSepia) filter += " sepia(100%)";
 
   ctx.save();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.filter = filter;
 
-  ctx.filter = filterString;
   ctx.translate(canvas.width / 2, canvas.height / 2);
   ctx.rotate((rotation * Math.PI) / 180);
   ctx.scale(flipX, flipY);
 
-  ctx.drawImage(
-    image,
-    -image.width / 2,
-    -image.height / 2,
-    image.width,
-    image.height
-  );
-
+  ctx.drawImage(image, -image.width / 2, -image.height / 2);
   ctx.restore();
 }
 
-/* ================== SLIDER EVENTS ================== */
-[brightness, contrast, saturation, blur].forEach(slider => {
-  slider.addEventListener("input", applyFilters);
-});
+/* ================== EVENTS ================== */
+[brightness, contrast, saturation, blur].forEach(s =>
+  s.addEventListener("input", applyFilters)
+);
 
-/* ================== EFFECT BUTTONS ================== */
-grayscaleBtn.addEventListener("click", () => {
-  isGrayscale = !isGrayscale;
-  isSepia = false;
-  applyFilters();
-});
+grayscaleBtn.onclick = () => { isGrayscale = !isGrayscale; isSepia = false; applyFilters(); };
+sepiaBtn.onclick = () => { isSepia = !isSepia; isGrayscale = false; applyFilters(); };
 
-sepiaBtn.addEventListener("click", () => {
-  isSepia = !isSepia;
-  isGrayscale = false;
-  applyFilters();
-});
+rotateBtn.onclick = () => { rotation = (rotation + 90) % 360; applyFilters(); };
+flipBtn.onclick = () => { flipX *= -1; applyFilters(); };
 
-/* ================== ROTATE ================== */
-rotateBtn.addEventListener("click", () => {
-  rotation = (rotation + 90) % 360;
-  applyFilters();
-});
-
-/* ================== FLIP ================== */
-flipBtn.addEventListener("click", () => {
-  flipX = flipX === 1 ? -1 : 1;
-  applyFilters();
-});
-
-/* ================== RESET ================== */
-resetBtn.addEventListener("click", () => {
-  brightness.value = 100;
-  contrast.value = 100;
-  saturation.value = 100;
+resetBtn.onclick = () => {
+  brightness.value = contrast.value = saturation.value = 100;
   blur.value = 0;
-
-  isGrayscale = false;
-  isSepia = false;
+  isGrayscale = isSepia = false;
   rotation = 0;
-  flipX = 1;
-  flipY = 1;
-
+  flipX = flipY = 1;
   applyFilters();
-});
+};
 
-/* ================== DOWNLOAD ================== */
-downloadBtn.addEventListener("click", () => {
-  if (!image.src) return;
-
+downloadBtn.onclick = () => {
   const link = document.createElement("a");
   link.download = "pixelman-edited.png";
-  link.href = canvas.toDataURL("image/png");
+  link.href = canvas.toDataURL();
   link.click();
-});
+};
 
 /* ================== SAVE PREFERENCES ================== */
-savePrefBtn.addEventListener("click", async () => {
+savePrefBtn.onclick = async () => {
   const defaults = {
     brightness: brightness.value,
     contrast: contrast.value,
@@ -193,26 +147,14 @@ savePrefBtn.addEventListener("click", async () => {
     blur: blur.value
   };
 
-  try {
-    const res = await fetch("http://localhost:5000/api/preferences", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ defaults })
-    });
+  const res = await fetch(`${API_BASE}/api/preferences`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ defaults })
+  });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.message || "Failed to save preferences");
-      return;
-    }
-
-    alert("Preferences saved successfully ✅");
-
-  } catch {
-    alert("Server error while saving preferences");
-  }
-});
+  if (res.ok) alert("Preferences saved ✅");
+};

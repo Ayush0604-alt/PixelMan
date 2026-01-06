@@ -1,4 +1,6 @@
-// ===== AUTO REDIRECT IF LOGGED IN =====
+const API_BASE = "https://pixelman-backend.onrender.com";
+
+// AUTO REDIRECT IF LOGGED IN
 if (localStorage.getItem("token")) {
   window.location.href = "dashboard.html";
 }
@@ -11,7 +13,7 @@ const message = document.getElementById("message");
 
 let isLogin = true;
 
-// Toggle Login ↔ Register
+// Toggle Login/Register
 toggleText.addEventListener("click", () => {
   isLogin = !isLogin;
 
@@ -38,15 +40,13 @@ form.addEventListener("submit", async (e) => {
   }
 
   const endpoint = isLogin
-    ? "http://localhost:5000/api/auth/login"
-    : "http://localhost:5000/api/auth/register";
+    ? `${API_BASE}/api/auth/login`
+    : `${API_BASE}/api/auth/register`;
 
   try {
     const res = await fetch(endpoint, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
     });
 
@@ -57,15 +57,10 @@ form.addEventListener("submit", async (e) => {
       return;
     }
 
-    // LOGIN SUCCESS
     if (isLogin) {
       localStorage.setItem("token", data.token);
-      localStorage.setItem("username", data.user.username);
-
       window.location.href = "dashboard.html";
-    } 
-    // REGISTER SUCCESS
-    else {
+    } else {
       message.style.color = "green";
       message.textContent = "Registered successfully! Please login.";
 
@@ -75,7 +70,7 @@ form.addEventListener("submit", async (e) => {
       toggleText.textContent = "Don't have an account? Register";
     }
 
-  } catch (error) {
+  } catch {
     message.textContent = "Unable to connect to server";
   }
 });
