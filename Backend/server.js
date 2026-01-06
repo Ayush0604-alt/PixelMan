@@ -15,7 +15,8 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: "*"
+  origin: "*",
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
